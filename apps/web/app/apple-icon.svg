@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <title>CourseFit</title>
+  <rect width="180" height="180" rx="36" fill="#0E1B2C"/>
+  <path d="M90 32 L99.6 79.4 L147 90 L99.6 100.6 L90 148 L80.4 100.6 L33 90 L80.4 79.4 Z" fill="#C99A2E"/>
+  <text x="90" y="167" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-weight="600" fill="#EDE7D6" opacity="0.7" letter-spacing="1.5">COURSEFIT</text>
+</svg>

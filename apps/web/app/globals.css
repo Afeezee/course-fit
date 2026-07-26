@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f7f5ee;
+  --ink: #0e1b2c;
+  --ink-muted: #4b5566;
+  --seal: #b23a2a;
+  --eligible: #3b7a6a;
+  --gold: #c99a2e;
+  --rule: rgba(14, 27, 44, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0f1620;
+    --ink: #ede7d6;
+    --ink-muted: #9aa3b2;
+    --seal: #d76454;
+    --eligible: #6bb59f;
+    --gold: #e8be5c;
+    --rule: rgba(237, 231, 214, 0.16);
+  }
+}
+
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-feature-settings: "cv02", "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--seal);
+  color: var(--paper);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline-color: var(--seal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* subtle paper grain — a tiny amount, not decorative-heavy */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(14, 27, 44, 0.025) 1px, transparent 1px);
+  background-size: 3px 3px;
+  z-index: 1;
+  mix-blend-mode: multiply;
+}
+@media (prefers-color-scheme: dark) {
+  body::before {
+    background-image: radial-gradient(rgba(237, 231, 214, 0.035) 1px, transparent 1px);
+    mix-blend-mode: screen;
+  }
+}

@@ -1,0 +1,20 @@
+# Node / Next.js
+node_modules/
+.next/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Local secrets — never commit any .env or .env.local under apps/
+# (covers apps/api/.env, apps/api/.env.local, apps/web/.env.local, etc.)
+apps/**/.env
+apps/**/.env.local
+apps/**/.env.*.local
+
+# Vercel CLI
+.vercel
+
+# OS
+.DS_Store

@@ -1,0 +1,29 @@
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+pydantic>=2.7,<3.0
+python-dotenv>=1.0,<2.0
+
+# Optional LLM explanation upgrade (see explanation.py). If GROQ_API_KEY
+# is unset the module short-circuits and the deterministic template
+# explanation from recommend.py is used instead — so this dependency
+# only matters when the key is present.
+groq>=0.11,<1.0
+
+# Optional Postgres persistence (see db.py). If DATABASE_URL is unset
+# the module short-circuits and /api/recommend still works — it just
+# doesn't write to the DB, and /api/recent returns an empty list.
+psycopg[binary,pool]>=3.2,<4.0
+
+# Clerk JWT verification (see auth.py). Only needed for the signed-in
+# /api/history endpoint and the optional user-linked persistence in
+# /api/recommend. If CLERK_ISSUER is unset the auth module short-
+# circuits and all endpoints continue to work anonymously.
+pyjwt[crypto]>=2.9,<3.0
+
+# ML deps — kept in lockstep with ../../ml/requirements.txt; sklearn is
+# pinned to the version that produced best_model.joblib so joblib.load
+# does not emit InconsistentVersionWarning at API startup.
+pandas>=2.2,<3.0
+scikit-learn>=1.8,<1.9
+xgboost>=2.0,<4.0
+joblib>=1.4,<2.0

@@ -1,0 +1,24 @@
+## Railway config for the FastAPI service.
+##
+## Deploy pattern: monorepo root. In the Railway service settings, leave
+## the "Root Directory" EMPTY (the whole repo is deployed) and set
+## "Config Path" to `apps/api/railway.toml` — this file. The build and
+## start commands `cd` into apps/api themselves.
+##
+## Why not per-service root: apps/api/main.py imports directly from the
+## sibling ml/ folder (jamb_data.py, eligibility.py, recommend.py,
+## best_model.joblib). Setting the service root to apps/api would leave
+## ml/ outside the deployed tree and the API would fail at startup with
+## ModuleNotFoundError.
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "pip install -r apps/api/requirements.txt"
+watchPatterns = ["apps/api/**", "ml/**"]
+
+[deploy]
+startCommand = "cd apps/api && uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+healthcheckPath = "/api/health"
+healthcheckTimeout = 20

@@ -1,0 +1,16 @@
+# Only the API-project Vercel deploy uses this file. The web project
+# sets Root Directory=apps/web in the Vercel dashboard so it never
+# sees the excludes below.
+#
+# The API bundle needs:
+#   apps/api/    — FastAPI code + requirements.txt
+#   ml/          — model + jamb_data + eligibility + recommend (pulled in via vercel.json includeFiles)
+# and nothing else. Excluding apps/web/ alone saves ~150MB of node_modules.
+
+apps/web/
+node_modules/
+.next/
+docs/
+.env
+.env.local
+.env.example

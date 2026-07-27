@@ -35,9 +35,17 @@ Web runs as a Node.js service via Nixpacks.
 3. Add a second service in the same project: **New → GitHub Repo →
    Afeezee/course-fit** again.
 4. In the second service's Settings:
-   - **Root Directory**: EMPTY
-   - **Config Path**: `apps/web/railway.toml`
+   - **Root Directory**: `apps/web`  ← different from the api!
+   - **Config Path**: leave EMPTY (no config file — Nixpacks
+     auto-detects Next.js from `apps/web/package.json`).
    - Rename to **`web`**.
+
+The two services now use different deploy patterns intentionally:
+the api uses `Root Directory=/` + `Config Path=apps/api/railway.toml`
+because its Dockerfile needs to see both `apps/api/` and the sibling
+`ml/` folder as build context. The web has no cross-directory
+imports, so it uses the simpler `Root Directory=apps/web` pattern
+with no config file.
 
 You should now see two services (`api` and `web`) in one project, both
 tracking the same repo but with different config paths.

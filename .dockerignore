@@ -1,32 +1,14 @@
-# Keep the Docker build context small AND make sure apps/api + ml
-# are visible to `COPY . .` in apps/api/Dockerfile.
+# Minimal exclusions only. Anything more aggressive has tripped
+# Railway's BuildKit checksum step in earlier attempts.
 
-# Version control / editor
 .git
-.gitignore
-.vscode
-.idea
-.DS_Store
-
-# Web app is not needed by the API image
-apps/web
 node_modules
+apps/web/node_modules
 
-# Docs and platform configs
-docs
-*.md
-.vercelignore
-.vercel
-.claude
-
-# Python build junk
-__pycache__
-*.pyc
-.venv
-.pytest_cache
-
-# Local secrets — never bake these into the image
+# Never bake local secrets into the image
 .env
-.env.*
+.env.local
 apps/api/.env
-apps/api/.env.*
+apps/api/.env.local
+apps/web/.env
+apps/web/.env.local

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth, useUser, SignInButton } from "@clerk/clerk-react";
 import { AuthHeader } from "@/components/AuthHeader";
 import { AUTH_ENABLED } from "@/lib/clerkFlag";
 import { api } from "@/lib/api";
@@ -39,6 +39,42 @@ export default function HistoryPage() {
       }
     })();
   }, [isLoaded, isSignedIn, getToken]);
+
+  // Static export can't run middleware, so the sign-in gate happens
+  // client-side. When Clerk finishes loading and reports no session,
+  // show a friendly sign-in prompt instead of a permanent spinner.
+  if (isLoaded && !isSignedIn) {
+    return (
+      <main className="mx-auto flex min-h-dvh max-w-measure flex-col justify-center gap-6 px-6">
+        <p className="text-xs uppercase tracking-[0.2em] text-ink-muted">
+          Your history
+        </p>
+        <h1 className="font-display text-3xl leading-tight">
+          Sign in to see your past recommendations.
+        </h1>
+        <p className="text-sm text-ink-muted">
+          Runs you did while signed out aren&apos;t linked to any account, so
+          only submissions you make after signing in will appear here.
+        </p>
+        <div className="flex gap-3">
+          <SignInButton mode="modal">
+            <button
+              type="button"
+              className="rounded-full border border-ink bg-ink px-5 py-2.5 text-sm font-medium text-paper hover:bg-seal hover:border-seal"
+            >
+              Sign in
+            </button>
+          </SignInButton>
+          <Link
+            href="/"
+            className="rounded-full border border-rule px-5 py-2.5 text-sm text-ink-muted hover:border-ink hover:text-ink"
+          >
+            Back to landing
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   const firstName = user?.firstName ?? user?.username ?? null;
 

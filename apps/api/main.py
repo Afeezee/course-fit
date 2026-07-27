@@ -25,6 +25,8 @@ from typing import Dict, List, Literal, Optional
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, field_validator
 
 # Load apps/api/.env (if present) before anything reads os.environ, so
@@ -410,4 +412,40 @@ def recommend(
         eligible_count=len(eligible),
         model_name=_ModelState.model_name,
         explanation_source=source,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Static frontend mount (single-container deploy).
+#
+# In the single-service Railway setup, this container also serves the
+# Next.js static export at "/", so the frontend and API share the same
+# origin (no CORS, no cross-service URL wiring). The Docker build's web
+# stage produces the export at apps/web/out/ and copies it here.
+#
+# Local dev (two servers) doesn't need this — the Next.js dev server
+# handles the frontend itself. When the directory is absent, we just
+# skip the mount and the API runs headless.
+# ---------------------------------------------------------------------------
+_WEB_DIR = (_API_DIR / ".." / "web" / "out").resolve()
+_WEB_DIR_ALT = Path("/app/web-static")  # what the Dockerfile copies to
+
+_web_root: Optional[Path] = None
+for _candidate in (_WEB_DIR, _WEB_DIR_ALT):
+    if _candidate.is_dir():
+        _web_root = _candidate
+        break
+
+if _web_root is not None:
+    @app.get("/", include_in_schema=False)
+    def _index() -> FileResponse:
+        return FileResponse(_web_root / "index.html")
+
+    # StaticFiles(html=True) resolves /foo/ -> /foo/index.html, so the
+    # combination of trailingSlash:true in next.config.mjs + html=True
+    # here gives correct routing for /wizard/, /history/, etc.
+    app.mount(
+        "/",
+        StaticFiles(directory=str(_web_root), html=True),
+        name="web",
     )

@@ -1,20 +1,21 @@
-## Railway config for the FastAPI service.
+## Railway config for the single CourseFit service.
 ##
-## Deploy pattern: monorepo root. In the Railway service settings, leave
-## the "Root Directory" EMPTY (the whole repo is deployed) and set
-## "Config Path" to `apps/api/railway.toml` — this file. The build and
-## start commands `cd` into apps/api themselves.
+## ONE service, ONE deploy. The Dockerfile is a multi-stage build:
+##   stage 1  — Node: builds the Next.js static export (apps/web/out/)
+##   stage 2  — Python: installs API deps, copies ml/, copies web/out/
+##                     and runs uvicorn which serves BOTH:
+##                       /api/*   — the recommender API
+##                       /...     — the static web assets
 ##
-## Why not per-service root: apps/api/main.py imports directly from the
-## sibling ml/ folder (jamb_data.py, eligibility.py, recommend.py,
-## best_model.joblib). Setting the service root to apps/api would leave
-## ml/ outside the deployed tree and the API would fail at startup with
-## ModuleNotFoundError.
+## In Railway service settings:
+##   Root Directory:  (blank — whole repo is the build context)
+##   Config Path:     apps/api/railway.toml
 
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "apps/api/Dockerfile"
-watchPatterns = ["apps/api/**", "ml/**"]
+# Rebuild on any code change — this one service owns both sides now.
+watchPatterns = ["apps/api/**", "apps/web/**", "ml/**"]
 
 [deploy]
 # The Dockerfile's CMD handles uvicorn startup + $PORT binding.

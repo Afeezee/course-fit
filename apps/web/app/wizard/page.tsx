@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/clerk-react";
 import { AUTH_ENABLED } from "@/lib/clerkFlag";
 import { api } from "@/lib/api";
 import type {

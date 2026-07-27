@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-import { AUTH_ENABLED } from "@/lib/clerkFlag";
+import { AuthWrapper } from "@/components/AuthWrapper";
 import "./globals.css";
 
 const display = Fraunces({
@@ -24,32 +23,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // ClerkProvider hard-throws when no publishable key is present, so
-  // only mount it when auth is actually configured. The rest of the
-  // app (landing + wizard + activity feed) works fine anonymously.
-  const body = (
+  return (
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body className="relative min-h-dvh">
-        <div className="relative z-10">{children}</div>
+        <div className="relative z-10">
+          <AuthWrapper>{children}</AuthWrapper>
+        </div>
       </body>
     </html>
-  );
-
-  if (!AUTH_ENABLED) return body;
-
-  return (
-    <ClerkProvider
-      appearance={{
-        variables: {
-          colorPrimary: "#0e1b2c",
-          colorText: "#0e1b2c",
-          colorBackground: "#f7f5ee",
-          fontFamily: "var(--font-sans)",
-          borderRadius: "0.5rem",
-        },
-      }}
-    >
-      {body}
-    </ClerkProvider>
   );
 }

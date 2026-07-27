@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import { AUTH_ENABLED } from "@/lib/clerkFlag";
 
 // Right-side controls in the header of every page.
